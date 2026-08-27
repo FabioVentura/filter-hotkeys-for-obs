@@ -38,7 +38,7 @@
     },
     "name": "filter-hotkeys-for-obs",
     "displayName": "Filter Hotkeys for OBS",
-    "version": "1.0.0",
+    "version": "1.0.9",
     "author": "Fabio Ventura",
     "website": "https://github.com/obsproject/obs-plugintemplate",
         "email": "streamprogamers@proton.me"

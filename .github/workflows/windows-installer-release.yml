@@ -1,0 +1,66 @@
+name: Windows Installer Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'installer-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-installer:
+    name: Build Filter Hotkeys Windows installer
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Read project metadata
+        id: metadata
+        run: |
+          $BuildSpec = Get-Content -Path buildspec.json -Raw | ConvertFrom-Json
+          "pluginName=$($BuildSpec.name)" >> $env:GITHUB_OUTPUT
+          "pluginVersion=$($BuildSpec.version)" >> $env:GITHUB_OUTPUT
+
+      - name: Build plugin
+        uses: ./.github/actions/build-plugin
+        with:
+          target: x64
+          config: Release
+
+      - name: Install plugin into staging directory
+        run: |
+          cmake --install "build_x64" `
+            --prefix "$env:GITHUB_WORKSPACE/release/Release" `
+            --config Release
+
+      - name: Create Windows installer ZIP
+        run: |
+          .\installer\windows\Package-FilterHotkeys.ps1 `
+            -ProjectRoot "$env:GITHUB_WORKSPACE" `
+            -Configuration Release
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: filter-hotkeys-windows-installer
+          path: release/*-windows-x64-installer.zip
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Filter Hotkeys ${{ steps.metadata.outputs.pluginVersion }}
+          generate_release_notes: true
+          files: release/*-windows-x64-installer.zip

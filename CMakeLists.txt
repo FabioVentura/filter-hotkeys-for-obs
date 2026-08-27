@@ -4,8 +4,17 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/bootstrap.cmake" NO_POLICY_SCO
 
 project(${_name} VERSION ${_version})
 
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS ON)
+
 option(ENABLE_FRONTEND_API "Use obs-frontend-api for UI functionality" OFF)
 option(ENABLE_QT "Use Qt functionality" OFF)
+set(OBS_INSTALL_PREFIX "" CACHE PATH "OBS Studio development/install prefix")
+
+if(OBS_INSTALL_PREFIX)
+  list(PREPEND CMAKE_PREFIX_PATH "${OBS_INSTALL_PREFIX}")
+endif()
 
 include(compilerconfig)
 include(defaults)
@@ -37,6 +46,7 @@ endif()
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/plugin-main.c
   src/filter-hotkey.c
+  src/filter-hotkey.h
 )
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})

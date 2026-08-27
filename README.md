@@ -15,6 +15,12 @@ Filter Hotkeys for OBS is a native OBS Studio filter that lets you select anothe
 
 The controller is implemented as a normal video filter. It passes the video through without changing the image and only changes the enabled state of the selected target filter when its registered hotkey is pressed.
 
+### Download the Windows installer
+
+Download the latest Windows x64 installer from the [Releases page](https://github.com/FabioVentura/filter-hotkeys-for-obs/releases). Download the ZIP asset, extract it, close OBS Studio, and run `Install-FilterHotkeys.cmd`. The installer places the plugin in the OBS installation and keeps a manifest for safe removal. The release asset is intended for OBS Studio 32.2.2 x64 and compatible 64-bit versions.
+
+The repository includes a GitHub Actions workflow named **Windows Installer Release**. It can be started from the **Actions** tab with **Run workflow**, or automatically by pushing a tag named `installer-v*`, such as `installer-v1.0.9`. The workflow builds the plugin, creates the installer ZIP, uploads it as an artifact, and attaches it to the tag release.
+
 ### Features
 
 - Select a target filter from the filters attached to the same source.
@@ -49,12 +55,12 @@ The exact dependency package names depend on the Linux distribution. The project
 Open a **Developer Command Prompt for Visual Studio** with CMake, MSVC, the Windows SDK, and the OBS development dependencies available. From the project directory, run:
 
 ```powershell
-cmake --preset windows-x64
+cmake --preset windows-x64 -DOBS_INSTALL_PREFIX="C:/path/to/obs-sdk-or-install-prefix"
 cmake --build --preset windows-x64 --config RelWithDebInfo
 cmake --install build_x64 --config RelWithDebInfo
 ```
 
-The resulting module is installed under the OBS plugin directory as `filter-hotkeys-for-obs.dll`.
+`OBS_INSTALL_PREFIX` is optional when `libobs` is already discoverable through `CMAKE_PREFIX_PATH`. It should point to the OBS development or installation prefix containing the CMake package files for `libobs`. The resulting module is installed under the OBS plugin directory as `filter-hotkeys-for-obs.dll`.
 
 ### Build on macOS
 
@@ -142,6 +148,12 @@ O Filter Hotkeys para OBS e um filtro nativo que permite selecionar outro filtro
 
 O controlador e implementado como um filtro de video comum. Ele repassa o video sem alterar a imagem e somente modifica o estado de habilitacao do filtro escolhido quando a hotkey registrada e pressionada.
 
+### Download do instalador Windows
+
+Baixe o instalador Windows x64 mais recente na pagina de [Releases](https://github.com/FabioVentura/filter-hotkeys-for-obs/releases). Baixe o arquivo ZIP, extraia-o, feche o OBS Studio e execute `Install-FilterHotkeys.cmd`. O instalador coloca o plugin na instalacao do OBS e mantem um manifesto para permitir a remocao segura. O arquivo da release foi preparado para o OBS Studio 32.2.2 x64 e versoes compativeis de 64 bits.
+
+O repositorio inclui um workflow do GitHub Actions chamado **Windows Installer Release**. Ele pode ser iniciado na aba **Actions** com **Run workflow**, ou automaticamente ao enviar uma tag com o nome `installer-v*`, como `installer-v1.0.9`. O workflow compila o plugin, cria o ZIP do instalador, publica o arquivo como artifact e anexa o ZIP a release da tag.
+
 ### Recursos
 
 - Selecionar um filtro-alvo entre os filtros anexados a mesma fonte.
@@ -176,12 +188,12 @@ Os nomes exatos dos pacotes dependem da distribuicao Linux. O projeto usa a estr
 Abra um **Developer Command Prompt for Visual Studio** com CMake, MSVC, Windows SDK e as dependencias de desenvolvimento do OBS disponiveis. Na pasta do projeto, execute:
 
 ```powershell
-cmake --preset windows-x64
+cmake --preset windows-x64 -DOBS_INSTALL_PREFIX="C:/caminho/do/obs-sdk-ou-prefixo-de-instalacao"
 cmake --build --preset windows-x64 --config RelWithDebInfo
 cmake --install build_x64 --config RelWithDebInfo
 ```
 
-O modulo resultante e instalado no diretorio de plugins do OBS com o nome `filter-hotkeys-for-obs.dll`.
+`OBS_INSTALL_PREFIX` e opcional quando o `libobs` ja pode ser encontrado pelo `CMAKE_PREFIX_PATH`. Ele deve apontar para o prefixo de desenvolvimento ou instalacao do OBS que contenha os arquivos de pacote CMake do `libobs`. O modulo resultante e instalado no diretorio de plugins do OBS com o nome `filter-hotkeys-for-obs.dll`.
 
 ### Compilacao no macOS
 
