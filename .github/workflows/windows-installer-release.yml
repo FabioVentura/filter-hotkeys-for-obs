@@ -45,8 +45,12 @@ jobs:
 
       - name: Create Windows installer ZIP
         run: |
-          .\installer\windows\Package-FilterHotkeys.ps1 `
-            -ProjectRoot "$env:GITHUB_WORKSPACE" `
+          $PackageScript = Join-Path $env:GITHUB_WORKSPACE 'installer\windows\Package-FilterHotkeys.ps1'
+          if (-not (Test-Path -LiteralPath $PackageScript)) {
+            throw "Packaging script not found: $PackageScript"
+          }
+          & $PackageScript `
+            -ProjectRoot $env:GITHUB_WORKSPACE `
             -Configuration Release
 
       - name: Upload installer artifact
