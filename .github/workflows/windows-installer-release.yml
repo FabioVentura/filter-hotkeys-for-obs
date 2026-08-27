@@ -43,7 +43,7 @@ jobs:
             --prefix "$env:GITHUB_WORKSPACE/release/Release" `
             --config Release
 
-            - name: Create Windows installer ZIP
+        - name: Create Windows installer ZIP
         shell: pwsh
         run: |
           $PackageScript = Join-Path $env:GITHUB_WORKSPACE 'installer\windows\Package-FilterHotkeys.ps1'
@@ -52,8 +52,7 @@ jobs:
           }
           & $PackageScript -ProjectRoot $env:GITHUB_WORKSPACE -Configuration Release
 
-
-      - name: Upload installer artifact
+- name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: filter-hotkeys-windows-installer
